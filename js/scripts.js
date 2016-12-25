@@ -1,4 +1,8 @@
 var Game = function() {
+  const LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2;
+
   var speed = 6,
   fps = 60,
   snow = null,
@@ -6,15 +10,75 @@ var Game = function() {
   rand = 100,
   trees = [],
   viewHeight = 0,
-  treeIndex = 0;
+  treeIndex = 0,
+  sleigh = null,
+  sleighPosition = MIDDLE;
 
   return {
     init: function() {
       container = document.getElementById("container");
+      sleigh = document.getElementById("sleigh");
       viewHeight = parseInt(getComputedStyle(container)['height'].replace("px",""));
       Game.addSnow();
       Game.randomInterval();
       Game.animateStuff();
+      Game.listenForInput();
+    },
+    listenForInput: function() {
+      document.onkeydown = function(e) {
+        e = e || window.event;
+        switch(e.which || e.keyCode) {
+          case 37: // left
+          Game.moveLeft();
+          break;
+
+          case 39: // right
+          Game.moveRight();
+          break;
+
+          default: return;
+        }
+        e.preventDefault();
+      };
+    },
+    moveLeft: function() {
+      switch (sleighPosition) {
+        case LEFT:
+        // do nothing, because we're already on the left
+        break;
+
+        case MIDDLE:
+        sleighPosition = LEFT;
+        sleigh.classList.add("left");
+        break;
+
+        case RIGHT:
+        sleighPosition = MIDDLE;
+        sleigh.classList.remove("right");
+        break;
+
+        default: return;
+      }
+    },
+    moveRight: function() {
+      switch (sleighPosition) {
+        case LEFT:
+        sleighPosition = MIDDLE;
+        sleigh.classList.remove("left");
+        break;
+
+        case MIDDLE:
+        sleighPosition = RIGHT;
+        sleigh.classList.add("right");
+        break;
+
+        case RIGHT:
+        // do nothing, because we're already on the right
+        break;
+
+        default: return;
+      }
+
     },
     randomInterval: function() {
       rand = Math.round(Math.random() * (1000 - 500)) + 500;
@@ -70,9 +134,7 @@ var Game = function() {
 
         tree.style.top = treeTop + "px";
 
-        console.log(viewHeight);
         if(treeTop > viewHeight + 100) {
-          console.log("remove tree: " + i);
           tree.parentNode.removeChild(tree);
           trees.splice(i, 1);
         }
