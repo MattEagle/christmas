@@ -67,3 +67,14 @@ table {
   height: 1000px;
   background-image: url(../img/snow.png);
 }
+
+.tree {
+  width: 100px;
+  position: absolute;
+  top: -100px;
+  height: 100px;
+  background-image: url(../img/tree.png);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
