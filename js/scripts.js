@@ -61,6 +61,13 @@ var Game = function() {
       document.getElementById("start-mom").addEventListener("click", function() {
         Game.startGame(MOM);
       });
+
+      var elements = document.querySelectorAll(".gifts li");
+      Array.prototype.forEach.call(elements, function(el, i){
+        el.addEventListener("click", function() {
+          el.classList.add("revealed");
+        });
+      });
     },
     startGame: function(user) {
       gameStarted = true;
@@ -69,21 +76,21 @@ var Game = function() {
 
       switch (user) {
         case DEMO:
-        Game.startTimer(10);
+        Game.startTimer(15, user);
         break;
 
         case JASON:
-        Game.startTimer(30);
+        Game.startTimer(45, user);
         break;
 
         case MOM:
-        Game.startTimer(30);
+        Game.startTimer(45, user);
         break;
 
         default: break;
       }
     },
-    startTimer: function(seconds) {
+    startTimer: function(seconds, user) {
       timeRemaining = seconds;
       document.getElementById("timer").innerHTML = timeRemaining + "s";
 
@@ -92,9 +99,22 @@ var Game = function() {
         document.getElementById("timer").innerHTML = timeRemaining + "s";
 
         if(timeRemaining <= 0) {
+          if(user == JASON || user == MOM) {
+            Game.congrats(user, score);
+          }
           Game.reset();
         }
       }, 1000);
+    },
+    congrats: function(user, finalScore) {
+      if(user == JASON) {
+        document.getElementById("congrats-jason").style.display = "block";
+        document.getElementById("congrats-jason-score").innerHTML = finalScore;
+      }
+
+      if(user == MOM) {
+        document.getElementById("congrats-mom").style.display = "block";
+      }
     },
     reset: function() {
       // reset the timer

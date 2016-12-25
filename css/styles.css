@@ -180,3 +180,58 @@ table {
   font-family: -apple-system,BlinkMacSystemFont,sans-serif;
   opacity: 0;
 }
+
+.congrats {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #ffffff;
+  width: 100%;
+  height: 100%;
+  z-index: 7;
+  overflow-y: auto;
+  text-align: center;
+  font-family: -apple-system,BlinkMacSystemFont,sans-serif;
+}
+
+.congrats h1 {
+  margin-top: 60px;
+  font-size: 46px;
+}
+
+.congrats ul {
+  margin: 40px auto;
+  width: 300px;
+}
+
+.congrats ul li {
+  padding: 70px;
+  position: relative;
+  font-size: 20px;
+  cursor: default;
+}
+
+.congrats ul li:before {
+  content: "";
+  width: 100%;
+  height: 150px;
+  background-color: #ffffff;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-image: url(../img/gift-3d.jpg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  -webkit-transition: all 500ms ease;
+  -moz-transition: all 500ms ease;
+  -ms-transition: all 500ms ease;
+  -o-transition: all 500ms ease;
+  transition: all 500ms ease;
+}
+
+.congrats ul li.revealed:before {
+  opacity: 0;
+}
