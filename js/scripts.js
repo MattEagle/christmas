@@ -108,7 +108,7 @@ var Game = function() {
       setTimeout(function() {
         Game.addTree();
 
-        if(rand % 2 == 0) {
+        if(rand % 3 == 0 && gameStarted) {
           Game.addPresent();
         }
 
