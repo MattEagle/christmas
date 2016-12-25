@@ -1,7 +1,10 @@
 var Game = function() {
   const LEFT = 0,
   MIDDLE = 1,
-  RIGHT = 2;
+  RIGHT = 2,
+  DEMO = 0,
+  JASON = 1,
+  MOM = 2;
 
   var speed = 6,
   fps = 60,
@@ -9,10 +12,14 @@ var Game = function() {
   container = null,
   rand = 100,
   trees = [],
+  presents = [],
   viewHeight = 0,
   treeIndex = 0,
   sleigh = null,
-  sleighPosition = MIDDLE;
+  sleighPosition = MIDDLE,
+  gameStarted = false,
+  gameUser = null,
+  score = 0;
 
   return {
     init: function() {
@@ -40,6 +47,22 @@ var Game = function() {
         }
         e.preventDefault();
       };
+
+      document.getElementById("start-demo").addEventListener("click", function() {
+        Game.startGame(DEMO);
+      });
+
+      document.getElementById("start-jason").addEventListener("click", function() {
+        Game.startGame(JASON);
+      });
+
+      document.getElementById("start-mom").addEventListener("click", function() {
+        Game.startGame(MOM);
+      });
+    },
+    startGame: function(user) {
+      gameStarted = true;
+      document.getElementById("overview").style.display = "none";
     },
     moveLeft: function() {
       switch (sleighPosition) {
@@ -84,8 +107,38 @@ var Game = function() {
       rand = Math.round(Math.random() * (1000 - 500)) + 500;
       setTimeout(function() {
         Game.addTree();
+
+        if(rand % 2 == 0) {
+          Game.addPresent();
+        }
+
         Game.randomInterval();
       }, rand);
+    },
+    addPresent: function() {
+      var present = document.createElement("div");
+      var pos = Math.round(Math.random() * (3 - 1) + 1);
+
+      present.classList.add("present");
+
+      switch (pos) {
+        case 1:
+        present.style.left = "95px";
+        present.classList.add("left");
+        break;
+
+        case 2:
+        present.style.left = "330px";
+        break;
+
+        case 3:
+        present.style.right = "95px";
+        present.classList.add("right");
+        break;
+      }
+
+      document.getElementById("path").appendChild(present);
+      presents.push(present);
     },
     addTree: function() {
       var tree = document.createElement("div");
@@ -119,6 +172,7 @@ var Game = function() {
       }, 1000 / fps);
     },
     redrawAssets: function() {
+      // animate the snow
       var snowTop = parseInt(getComputedStyle(snow)['top'].replace("px",""));
       snowTop += 0.5 * speed;
 
@@ -128,6 +182,7 @@ var Game = function() {
         snow.style.top = "0px";
       }
 
+      // animate the trees
       trees.forEach(function(tree, i){
         var treeTop = parseInt(getComputedStyle(tree)['top'].replace("px",""));
         treeTop += 0.5 * speed;
@@ -137,6 +192,42 @@ var Game = function() {
         if(treeTop > viewHeight + 100) {
           tree.parentNode.removeChild(tree);
           trees.splice(i, 1);
+        }
+      });
+
+      // animate the presents
+      presents.forEach(function(present, i){
+        var presentTop = parseInt(getComputedStyle(present)['top'].replace("px",""));
+        presentTop += 0.5 * speed;
+
+        present.style.top = presentTop + "px";
+
+        if(presentTop > viewHeight + 100) {
+          present.parentNode.removeChild(present);
+          presents.splice(i, 1);
+          return;
+        }
+
+        if(presentTop > (viewHeight - 220) && presentTop < (viewHeight - 200)) {
+          var presentPos = null;
+          if(present.classList.contains("left")) {
+            presentPos = LEFT;
+          } else if(present.classList.contains("right")) {
+            presentPos = RIGHT;
+          } else {
+            presentPos = MIDDLE;
+          }
+
+          console.log("present: " + presentPos);
+          console.log("sleigh: " + sleighPosition);
+
+          if(presentPos == sleighPosition) {
+            present.parentNode.removeChild(present);
+            presents.splice(i, 1);
+
+            score++;
+            document.getElementById("score").innerHTML = score;
+          }
         }
       });
     }
