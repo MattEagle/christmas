@@ -104,7 +104,7 @@ var Game = function() {
 
     },
     randomInterval: function() {
-      rand = Math.round(Math.random() * (1000 - 500)) + 500;
+      rand = Math.round(Math.random() * (1000 - 500)) + 500 - speed * 15;
       setTimeout(function() {
         Game.addTree();
 
@@ -218,15 +218,18 @@ var Game = function() {
             presentPos = MIDDLE;
           }
 
-          console.log("present: " + presentPos);
-          console.log("sleigh: " + sleighPosition);
-
           if(presentPos == sleighPosition) {
             present.parentNode.removeChild(present);
             presents.splice(i, 1);
 
             score++;
             document.getElementById("score").innerHTML = score;
+
+            // speed up slightly
+            if(speed < 30) {
+              speed += 1;
+              document.getElementById("speed").innerHTML = speed * 2 + "mph";
+            }
           }
         }
       });
