@@ -19,7 +19,9 @@ var Game = function() {
   sleighPosition = MIDDLE,
   gameStarted = false,
   gameUser = null,
-  score = 0;
+  score = 0,
+  timer = null,
+  timeRemaining = 0;
 
   return {
     init: function() {
@@ -63,6 +65,60 @@ var Game = function() {
     startGame: function(user) {
       gameStarted = true;
       document.getElementById("overview").style.display = "none";
+      document.getElementById("score-card").style.opacity = 1;
+
+      switch (user) {
+        case DEMO:
+        Game.startTimer(10);
+        break;
+
+        case JASON:
+        Game.startTimer(30);
+        break;
+
+        case MOM:
+        Game.startTimer(30);
+        break;
+
+        default: break;
+      }
+    },
+    startTimer: function(seconds) {
+      timeRemaining = seconds;
+      document.getElementById("timer").innerHTML = timeRemaining + "s";
+
+      timer = setInterval(function() {
+        timeRemaining--;
+        document.getElementById("timer").innerHTML = timeRemaining + "s";
+
+        if(timeRemaining <= 0) {
+          Game.reset();
+        }
+      }, 1000);
+    },
+    reset: function() {
+      // reset the timer
+      timeRemaining = 0;
+      clearInterval(timer);
+      timer = null;
+
+      // reset the vars
+      gameStarted = false;
+      speed = 6;
+      score = 0;
+
+      // reset the score-card
+      document.getElementById("score").innerHTML = score;
+      document.getElementById("speed").innerHTML = speed * 2 + "mph";
+
+      // show/hide stuff
+      document.getElementById("overview").style.display = "block";
+      document.getElementById("score-card").style.opacity = 0;
+
+      // remove any remaining presents
+      presents.forEach(function(present, i){
+        present.parentNode.removeChild(present);
+      });
     },
     moveLeft: function() {
       switch (sleighPosition) {
