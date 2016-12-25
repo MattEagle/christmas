@@ -114,6 +114,7 @@ var Game = function() {
 
       if(user == MOM) {
         document.getElementById("congrats-mom").style.display = "block";
+        document.getElementById("congrats-mom-score").innerHTML = finalScore;
       }
     },
     reset: function() {

@@ -234,4 +234,5 @@ table {
 
 .congrats ul li.revealed:before {
   opacity: 0;
+  pointer-events: none;
 }
